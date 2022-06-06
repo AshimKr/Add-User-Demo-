@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { useState } from 'react'
+import DisplayUsers from './Components/DisplayUsers'
+import ErrorModel from './Components/ErrorModel';
+import InputForm from './Components/InputForm'
+
 
 function App() {
+  const [users, setUsers] = useState([]);
+  const [error,setError] = useState(false);
+
+
+  const addUser = (newUser) => {
+    if (newUser.name.trim().length === 0 || newUser.age < 0 || +newUser.age.trim().length == 0) {
+      setError(true)
+      return;
+    } else {
+      setUsers([...users, newUser]);
+    }
+  }
+
+  //ErrorHandler
+  const errorHandler=()=>{
+    setError(err=> !err)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      {error && <ErrorModel onError={errorHandler} />}
+      <div className='container '>
+        <InputForm addUser={addUser} />
+        <DisplayUsers users={users} />
+      </div>
+    </>
+  )
 }
 
-export default App;
+export default App
